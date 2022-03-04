@@ -5,7 +5,6 @@ WORKDIR /app
 copy . ./ 
 EXPOSE 80 443
 
-ENV Logging__Console__FormatterName=Simple
 #RUN sed -i 's/TLSv1.2/TLSv1.0/g' /etc/ssl/openssl.cnf
 #RUN sed -i 's/TLSv1.2/TLSv1/g' /etc/ssl/openssl.cnf
 

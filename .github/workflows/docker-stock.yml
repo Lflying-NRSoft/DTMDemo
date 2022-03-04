@@ -20,18 +20,19 @@ jobs:
         dotnet-version: 6.0.x
     - name: Restore dependencies
       run: dotnet restore
-      working-directory: ./Services/Stock/DTMStockDemo         
+      working-directory: ./Services/Stock/DTMStockDemo
     - name: release
       run: dotnet publish -c Release
-      working-directory: ./Services/Stock/DTMStockDemo       
+      working-directory: ./Services/Stock/DTMStockDemo
       
       
     - name: Build the Docker image
+      working-directory: ./Services/Stock/DTMStockDemo
       run: |
           docker version
           # 登录阿里云镜像仓库          
           docker login --username=hi50032370@aliyun.com -p App123456 registry.cn-shanghai.aliyuncs.com
-          cd ./Services/Stock/DTMStockDemo/bin/Release/net6.0/publish      
+          cd ./bin/Release/net6.0/publish      
           # 使用Dockerfile构建镜像          
           docker build -t registry.cn-shanghai.aliyuncs.com/nrsoft/dtmdemostock:develop .          
           # 推送镜像到镜像仓库
