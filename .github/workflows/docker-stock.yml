@@ -1,6 +1,10 @@
-name: Docker ERP-Svr CI
+name: Docker Stock
 
-on: workflow_dispatch
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
 
 jobs:
 
@@ -16,12 +20,10 @@ jobs:
         dotnet-version: 6.0.x
     - name: Restore dependencies
       run: dotnet restore
-    - name: Build
-      run: dotnet build --no-restore
-    - name: Test
-      run: dotnet test --no-build --verbosity normal
+      working-directory: ./Services/Stock/DTMStockDemo         
     - name: release
       run: dotnet publish -c Release
+      working-directory: ./Services/Stock/DTMStockDemo       
       
       
     - name: Build the Docker image
@@ -29,7 +31,7 @@ jobs:
           docker version
           # 登录阿里云镜像仓库          
           docker login --username=hi50032370@aliyun.com -p App123456 registry.cn-shanghai.aliyuncs.com
-          cd Services/Stock/DTMStockDemo/bin/Release/net6.0/publish      
+          cd ./Services/Stock/DTMStockDemo/bin/Release/net6.0/publish      
           # 使用Dockerfile构建镜像          
           docker build -t registry.cn-shanghai.aliyuncs.com/nrsoft/dtmdemostock:develop .          
           # 推送镜像到镜像仓库
