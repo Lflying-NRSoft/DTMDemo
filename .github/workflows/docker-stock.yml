@@ -1,0 +1,36 @@
+name: Docker ERP-Svr CI
+
+on: workflow_dispatch
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 6.0.x
+    - name: Restore dependencies
+      run: dotnet restore
+    - name: Build
+      run: dotnet build --no-restore
+    - name: Test
+      run: dotnet test --no-build --verbosity normal
+    - name: release
+      run: dotnet publish -c Release
+      
+      
+    - name: Build the Docker image
+      run: |
+          docker version
+          # 登录阿里云镜像仓库          
+          docker login --username=hi50032370@aliyun.com -p App123456 registry.cn-shanghai.aliyuncs.com
+          cd Services/Stock/DTMStockDemo/bin/Release/net6.0/publish      
+          # 使用Dockerfile构建镜像          
+          docker build -t registry.cn-shanghai.aliyuncs.com/nrsoft/dtmdemostock:develop .          
+          # 推送镜像到镜像仓库
+          docker push registry.cn-shanghai.aliyuncs.com/nrsoft/dtmdemostock:develop          
