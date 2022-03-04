@@ -20,7 +20,7 @@ try
     // Add services to the container.
     builder.Services.AddDtmcli(x =>
     {
-        x.DtmUrl = "http://localhost:36789";
+        x.DtmUrl = "http://192.168.148.16:36789";
         // request timeout for DTM server, unit is milliseconds
         x.DtmTimeout = 10000;
 

@@ -23,7 +23,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddHttpApi<IOrderApi>(o => o.HttpHost = new Uri("http://localhost:32004"));
-builder.Services.AddHttpApi<IStockApi>(o => o.HttpHost = new Uri("http://localhost:32007"));
+builder.Services.AddHttpApi<IStockApi>(o => o.HttpHost = new Uri("http://192.168.148.16:5007"));
 
 builder.Services.AddTransient<ISaleOrderAppService, SaleOrderAppService>();
 

@@ -69,7 +69,7 @@ namespace ME3AppService
                 // 2. 创建订单
                 .Add("http://localhost:32004/api/Order/BarrierCreateOrder", "http://localhost:32004/api/Order/BarrierCreateOrderRevert", orderNo)
                 // 3. 扣减库存
-                .Add("http://localhost:32007/api/Stock/BarrierUpdateStock", "http://localhost:32007/api/Stock/BarrierUpdateStockRevert", orderNo)
+                .Add("http://192.168.148.16:5007/api/Stock/BarrierUpdateStock", "http://192.168.148.16:5007/api/Stock/BarrierUpdateStockRevert", orderNo)
                 ;
 
             await saga.Submit(cancellationToken);
@@ -104,9 +104,9 @@ namespace ME3AppService
 
                     // 3. 扣减库存
                     var res2 = await tcc.CallBranch(orderNo,
-                        "http://localhost:32007/api/Stock/TryBarrierUpdateStock",
-                        "http://localhost:32007/api/Stock/ConfirmBarrierUpdateStock",
-                        "http://localhost:32007/api/Stock/CancelBarrierUpdateStock",
+                        "http://192.168.148.16:5007/api/Stock/TryBarrierUpdateStock",
+                        "http://192.168.148.16:5007/api/Stock/ConfirmBarrierUpdateStock",
+                        "http://192.168.148.16:5007/api/Stock/CancelBarrierUpdateStock",
                         cancellationToken);
 
                     _logger.LogInformation($"tcc returns: {res1}-{res2}");
