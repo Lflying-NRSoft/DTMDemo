@@ -104,5 +104,11 @@ namespace DTMStockDemo.Controllers
         }
 
         #endregion
+
+        [HttpGet("test")]
+        public string Test()
+        {
+            return "OK";
+        }
     }
 }
