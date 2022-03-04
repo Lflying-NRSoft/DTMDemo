@@ -1,36 +1,31 @@
 using Dtmcli;
 using DTMStockAppService;
+using Serilog;
+using Serilog.Events;
 
 Log.Logger = new LoggerConfiguration()
-#if DEBUG
-            .MinimumLevel.Debug()
-#else
-            .MinimumLevel.Information()
-#endif
-            .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
+    .MinimumLevel.Debug()
+    .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
     .MinimumLevel.Override("Microsoft.EntityFrameworkCore", LogEventLevel.Warning)
     .Enrich.FromLogContext()
     .WriteTo.Async(c => c.File("Logs/logs.txt"))
-#if DEBUG
-            .WriteTo.Async(c => c.Console())
-#endif
-            .CreateLogger();
+    .WriteTo.Async(c => c.Console())
+    .CreateLogger();
 
 try
 {
-    Log.Information("Starting DTMStockDemo.");
-
+    Log.Information("Starting NRSoft.POSService.HttpApi.Host.");
     var builder = WebApplication.CreateBuilder(args);
-
+    builder.Host.UseSerilog();
     // Add services to the container.
     builder.Services.AddDtmcli(x =>
     {
-        x.DtmUrl = "http://192.168.148.16:36789";
-    // request timeout for DTM server, unit is milliseconds
-    x.DtmTimeout = 10000;
+        x.DtmUrl = "http://localhost:36789";
+        // request timeout for DTM server, unit is milliseconds
+        x.DtmTimeout = 10000;
 
-    // request timeout for trans branch, unit is milliseconds
-    x.BranchTimeout = 10000;
+        // request timeout for trans branch, unit is milliseconds
+        x.BranchTimeout = 10000;
         x.DBType = "sqlserver";
         x.BarrierTableName = "[dbo].[barrier]";
     });
@@ -61,7 +56,6 @@ try
 catch (Exception ex)
 {
     Log.Fatal(ex, "Host terminated unexpectedly!");
-    return 1;
 }
 finally
 {
