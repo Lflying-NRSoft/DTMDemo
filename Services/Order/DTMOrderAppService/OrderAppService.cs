@@ -5,9 +5,14 @@ namespace DTMOrderAppService
     public class OrderAppService : IOrderAppService
     {
 
-        public async Task<bool> CreateOrder(string OrderNo, IDbTransaction tran = null)
+        public async Task<bool> CreateOrder(string OrderNo, string status = null, IDbTransaction tran = null)
         {
-            return await DBHelper.Db.CreateSaleOrder(OrderNo, "Product001", "商品001", 5, tran);
+            return await DBHelper.Db.CreateSaleOrder(OrderNo, "Product001", "商品001", 5, status, tran);
+        }
+
+        public async Task<bool> UpdateOrder(string OrderNo, string status, IDbTransaction tran = null)
+        {
+            return await DBHelper.Db.UpdateSaleOrder(OrderNo, status, tran);
         }
 
         public async Task<OrderInfo> GetOrder(string OrderNo)

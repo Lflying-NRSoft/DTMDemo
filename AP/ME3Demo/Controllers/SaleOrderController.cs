@@ -34,13 +34,23 @@ namespace ME3Demo.Controllers
         }
 
         /// <summary>
-        /// 创建销售订单-DTM分布式事务
+        /// 创建销售订单-DTM分布式事务（Saga）
         /// </summary>
         /// <returns></returns>
-        [HttpPost("DTMCreate")]
-        public async Task<string> DTMCreate(CancellationToken cancellationToken)
+        [HttpPost("SagaCreate")]
+        public async Task<string> SagaCreate(CancellationToken cancellationToken)
         {
-            return await _saleOrderAppService.DTMCreateSaleOrder(cancellationToken);
+            return await _saleOrderAppService.SagaCreateSaleOrder(cancellationToken);
+        }
+
+        /// <summary>
+        /// 创建销售订单-DTM分布式事务（TCC模式）
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost("TCCCreate")]
+        public async Task<string> TCCCreate(CancellationToken cancellationToken)
+        {
+            return await _saleOrderAppService.TCCCreateSaleOrder(cancellationToken);
         }
     }
 }

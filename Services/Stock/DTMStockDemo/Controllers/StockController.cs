@@ -47,7 +47,7 @@ namespace DTMStockDemo.Controllers
             using var db = Db.GeConn();
             await barrier.Call(db, async (tx) =>
             {
-                await _stockAppService.UpdateStock(orderNo, tx);
+                await _stockAppService.UpdateStock(orderNo, StockType.Normal, tx);
             });
 
             return Ok(new { dtm_result = "SUCCESS" });
@@ -61,5 +61,48 @@ namespace DTMStockDemo.Controllers
             _logger.LogInformation($"库存要反扣减！{OrderNo}");
             return Ok(new { dtm_result = "SUCCESS" });
         }
+
+        #region TCC
+
+        [HttpPost("TryBarrierUpdateStock")]
+        public async Task<IActionResult> TryBarrierUpdateStock([FromBody] string orderNo)
+        {
+            var barrier = _barrierFactory.CreateBranchBarrier(Request.Query);
+            using var db = Db.GeConn();
+            await barrier.Call(db, async (tx) =>
+            {
+                await _stockAppService.UpdateStock(orderNo, StockType.Try, tx);
+            });
+
+            return Ok(new { dtm_result = "SUCCESS" });
+        }
+
+        [HttpPost("ConfirmBarrierUpdateStock")]
+        public async Task<IActionResult> ConfirmBarrierUpdateStock([FromBody] string orderNo)
+        {
+            var barrier = _barrierFactory.CreateBranchBarrier(Request.Query);
+            using var db = Db.GeConn();
+            await barrier.Call(db, async (tx) =>
+            {
+                await _stockAppService.UpdateStock(orderNo, StockType.Confirm, tx);
+            });
+
+            return Ok(new { dtm_result = "SUCCESS" });
+        }
+
+        [HttpPost("CancelBarrierUpdateStock")]
+        public async Task<IActionResult> CancelBarrierUpdateStock([FromBody] string orderNo)
+        {
+            var barrier = _barrierFactory.CreateBranchBarrier(Request.Query);
+            using var db = Db.GeConn();
+            await barrier.Call(db, async (tx) =>
+            {
+                await _stockAppService.UpdateStock(orderNo, StockType.Cancel, tx);
+            });
+
+            return Ok(new { dtm_result = "SUCCESS" });
+        }
+
+        #endregion
     }
 }

@@ -21,13 +21,28 @@ namespace DTMStockAppService
             _barrierFactory = barrierFactory;
         }
 
-        public async Task<bool> UpdateStock(string orderNo, DbTransaction tran = null)
+        public async Task<bool> UpdateStock(string orderNo, StockType type = StockType.Normal, DbTransaction tran = null)
         {
             // TODO 获取订单信息
             var order = await _orderApi.GetOrderAsync(orderNo);
             if (order != null)
             {
-                return await DBHelper.Db.UpdateStock(order.ProductNo, order.Count, tran);
+                if (type == StockType.Normal)
+                {
+                    return await DBHelper.Db.UpdateStock(order.ProductNo, order.Count, tran);
+                }
+                else if (type == StockType.Try)
+                {
+                    return await DBHelper.Db.TryReduceStock(order.ProductNo, order.Count, tran);
+                }
+                else if (type == StockType.Confirm)
+                {
+                    return await DBHelper.Db.ConfirmReduceStock(order.ProductNo, order.Count, tran);
+                }
+                else if (type == StockType.Cancel)
+                {
+                    return await DBHelper.Db.CancelReduceStock(order.ProductNo, order.Count, tran);
+                }
             }
 
             return false;

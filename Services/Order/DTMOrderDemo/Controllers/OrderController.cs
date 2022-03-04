@@ -67,7 +67,8 @@ namespace DTMOrderDemo.Controllers
         [HttpPost("DeleteOrder")]
         public async Task<IActionResult> DeleteOrder(string OrderNo)
         {
-            return Ok("订单生成成功");
+            await _orderAppService.UpdateOrder(OrderNo, "Invalid");
+            return Ok(new { dtm_result = "SUCCESS" });
         }
 
         /// <summary>
@@ -76,6 +77,7 @@ namespace DTMOrderDemo.Controllers
         /// <param name="OrderNo"></param>
         /// <returns></returns>
         [HttpPost("BarrierCreateOrder")]
+
         public async Task<IActionResult> BarrierCreateOrder([FromBody] string OrderNo)
         {
             var barrier = _barrierFactory.CreateBranchBarrier(Request.Query);
@@ -83,7 +85,7 @@ namespace DTMOrderDemo.Controllers
             {
                 await barrier.Call(conn, async (tx) =>
                 {
-                    await _orderAppService.CreateOrder(OrderNo, tx);
+                    await _orderAppService.CreateOrder(OrderNo, null, tx);
                 });
             }
 
@@ -98,5 +100,54 @@ namespace DTMOrderDemo.Controllers
             _logger.LogInformation($"订单要取消掉了哦！{OrderNo}");
             return Ok(new { dtm_result = "SUCCESS" });
         }
+
+
+        #region TCC
+
+        [HttpPost("TryBarrierCreateOrder")]
+        public async Task<IActionResult> TryBarrierCreateOrder([FromBody] string OrderNo)
+        {
+            var barrier = _barrierFactory.CreateBranchBarrier(Request.Query);
+            using (var conn = Db.GeConn())
+            {
+                await barrier.Call(conn, async (tx) =>
+                {
+                    await _orderAppService.CreateOrder(OrderNo, "Draft", tx);
+                });
+            }
+
+            return Ok(new { dtm_result = "SUCCESS" });
+        }
+
+        [HttpPost("ConfirmBarrierCreateOrder")]
+        public async Task<IActionResult> ConfirmBarrierCreateOrder([FromBody] string OrderNo)
+        {
+            var barrier = _barrierFactory.CreateBranchBarrier(Request.Query);
+            using (var conn = Db.GeConn())
+            {
+                await barrier.Call(conn, async (tx) =>
+                {
+                    await _orderAppService.UpdateOrder(OrderNo, "Completed", tx);
+                });
+            }
+
+            return Ok(new { dtm_result = "SUCCESS" });
+        }
+
+        [HttpPost("CancelBarrierCreateOrder")]
+        public async Task<IActionResult> CancelBarrierCreateOrder([FromBody] string OrderNo)
+        {
+            var barrier = _barrierFactory.CreateBranchBarrier(Request.Query);
+            using (var conn = Db.GeConn())
+            {
+                await barrier.Call(conn, async (tx) =>
+                {
+                    await _orderAppService.UpdateOrder(OrderNo, "Invalid", tx);
+                });
+            }
+
+            return Ok(new { dtm_result = "SUCCESS" });
+        }
+        #endregion  
     }
 }

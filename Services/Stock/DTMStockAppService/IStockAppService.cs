@@ -9,6 +9,6 @@ namespace DTMStockAppService
 {
     public interface IStockAppService
     {
-        Task<bool> UpdateStock(string orderNo, DbTransaction tran = null);
+        Task<bool> UpdateStock(string orderNo, StockType type = StockType.Normal, DbTransaction tran = null);
     }
 }

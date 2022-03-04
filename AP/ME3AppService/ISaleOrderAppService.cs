@@ -10,6 +10,8 @@ namespace ME3AppService
     {
         Task<string> CreateSaleOrder();
 
-        Task<string> DTMCreateSaleOrder(CancellationToken cancellationToken);
+        Task<string> SagaCreateSaleOrder(CancellationToken cancellationToken);
+
+        Task<string> TCCCreateSaleOrder(CancellationToken cancellationToken);
     }
 }
