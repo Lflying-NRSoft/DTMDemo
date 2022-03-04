@@ -1,0 +1,39 @@
+name: Docker Order
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 6.0.x
+    - name: Restore dependencies
+      run: dotnet restore
+      working-directory: ./Services/Order/DTMOrderDemo
+    - name: release
+      run: dotnet publish -c Release
+      working-directory: ./Services/Order/DTMOrderDemo
+      
+      
+    - name: Build the Docker image
+      working-directory: ./Services/Order/DTMOrderDemo
+      run: |
+          docker version
+          # 登录阿里云镜像仓库          
+          docker login --username=hi50032370@aliyun.com -p App123456 registry.cn-shanghai.aliyuncs.com
+          cd ./bin/Release/net6.0/publish      
+          # 使用Dockerfile构建镜像          
+          docker build -t registry.cn-shanghai.aliyuncs.com/nrsoft/dtmdemoorder:develop .          
+          # 推送镜像到镜像仓库
+          docker push registry.cn-shanghai.aliyuncs.com/nrsoft/dtmdemoorder:develop          

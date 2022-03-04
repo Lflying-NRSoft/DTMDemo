@@ -6,7 +6,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddDtmcli(x =>
 {
-    x.DtmUrl = "http://localhost:36789";
+    x.DtmUrl = "http://192.168.148.16:36789";
     // request timeout for DTM server, unit is milliseconds
     x.DtmTimeout = 10000;
 
@@ -26,11 +26,13 @@ builder.Services.AddTransient<IOrderAppService, OrderAppService>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+//if (app.Environment.IsDevelopment())
+//{
+//    app.UseSwagger();
+//    app.UseSwaggerUI();
+//}
+app.UseSwagger();
+app.UseSwaggerUI();
 
 app.UseAuthorization();
 
