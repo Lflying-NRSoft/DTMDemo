@@ -35,7 +35,8 @@ try
     builder.Services.AddEndpointsApiExplorer();
     builder.Services.AddSwaggerGen();
 
-    builder.Services.AddHttpApi<IOrderApi>(o => o.HttpHost = new Uri("http://localhost:32004"));
+    //builder.Services.AddHttpApi<IOrderApi>(o => o.HttpHost = new Uri("http://localhost:32004"));
+    builder.Services.AddHttpApi<IOrderApi>(o => o.HttpHost = new Uri("http://192.168.148.32:5006"));
     builder.Services.AddTransient<IStockAppService, StockAppService>();
 
     var app = builder.Build();

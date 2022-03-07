@@ -97,9 +97,9 @@ namespace ME3AppService
 
                     // 2. 创建订单
                     var res1 = await tcc.CallBranch(orderNo,
-                        "http://localhost:32004/api/Order/TryBarrierCreateOrder",
-                        "http://localhost:32004/api/Order/ConfirmBarrierCreateOrder",
-                        "http://localhost:32004/api/Order/CancelBarrierCreateOrder",
+                        "http://192.168.148.32:5006/api/Oms/TryBarrierCreateOrder",
+                        "http://192.168.148.32:5006/api/Oms/ConfirmBarrierCreateOrder",
+                        "http://192.168.148.32:5006/api/Oms/CancelBarrierCreateOrder",
                         cancellationToken);
 
                     // 3. 扣减库存

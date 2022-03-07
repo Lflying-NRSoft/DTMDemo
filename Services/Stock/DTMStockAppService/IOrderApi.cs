@@ -13,7 +13,8 @@ namespace DTMStockAppService
         [HttpPost("api/Order/CreateOrder")]
         Task CreateOrderAsync([AliasAs("OrderNo")] string orderNo, CancellationToken cancellationToken = default);
 
-        [HttpGet("api/Order/GetOrder")]
+        //[HttpGet("api/Order/GetOrder")]
+        [HttpGet("/api/Oms/GetOrderInfo")]
         ITask<OrderInfo> GetOrderAsync([AliasAs("OrderNo")] string orderNo, CancellationToken cancellationToken = default);
 
         [HttpPost("api/Order/DeleteOrder")]
